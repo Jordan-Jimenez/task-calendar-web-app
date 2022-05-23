@@ -11,11 +11,12 @@ const TaskAgenda = () => {
 		<Box p={3}>
 			{Object.values(App.tasksByDate)
 				.map((date) => date.filter((task) => !task.complete))
+				.filter((date) => date.length > 0)
 				.map((date) => {
-					const d = DateTime.fromISO(date[0].dueDate);
+					const d = DateTime.fromISO(date[0]?.dueDate);
 
 					return (
-						<Grid container key={date[0].dueDate} mb={3}>
+						<Grid container key={date[0]?.dueDate} mb={3}>
 							<Grid item xs={2} xl={2}>
 								{isToday(d) ? (
 									<Typography>Today</Typography>
