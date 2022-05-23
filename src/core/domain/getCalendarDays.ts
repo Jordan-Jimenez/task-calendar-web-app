@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 
 export default function getCalendarDays(
 	date: DateTime,
-	view: "week" | "month"
+	view: "week" | "month" | "agenda"
 ) {
 	let arr = Array.apply(null, Array(6)).map(
 		() =>

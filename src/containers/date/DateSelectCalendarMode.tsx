@@ -22,7 +22,7 @@ const DateSelectCalendarMode = React.memo(() => {
 		);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [window.location.pathname]);
 
 	const mdUp = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -34,7 +34,7 @@ const DateSelectCalendarMode = React.memo(() => {
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mdUp, open]);
+	}, [mdUp, open, window.location.pathname]);
 
 	return (
 		<>

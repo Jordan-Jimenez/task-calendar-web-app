@@ -4,13 +4,13 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./containers/Layout";
-import AppProvider from "./context/AppProvider";
+import CalendarProvider from "./context/CalendarProvider";
 import theme from "./core/theme";
 import Root from "./pages/Root";
 
 function App() {
 	return (
-		<AppProvider>
+		<CalendarProvider>
 			<LocalizationProvider dateAdapter={AdapterLuxon}>
 				<ThemeProvider theme={theme}>
 					<BrowserRouter>
@@ -24,7 +24,7 @@ function App() {
 					</BrowserRouter>
 				</ThemeProvider>
 			</LocalizationProvider>
-		</AppProvider>
+		</CalendarProvider>
 	);
 }
 

@@ -1,22 +1,26 @@
-import React from "react";
-
-import Container from "@mui/material/Container/Container";
 import { Outlet } from "react-router-dom";
 import makeStyles from "@mui/styles/makeStyles/makeStyles";
-import { Box, Hidden, Theme, Typography } from "@mui/material";
+import { Box, Hidden, Theme } from "@mui/material";
+import { observer } from "mobx-react-lite";
 
-import LayoutDates from "./dateControl/LayoutDates";
-import DateSelectCalendarMode from "./dateControl/DateSelectCalendarMode";
-import DateSelectDrawerButton from "./dateControl/DateSelectDrawerButton";
-import NewTaskButton from "./task/NewTaskButton";
-import taskCalendar from "../core/imgs/taskCalendar.png";
+import LayoutDates from "./date/LayoutDates";
+import DateSelectCalendarMode from "./date/DateSelectCalendarMode";
+import DateSelectDrawerButton from "./date/DateSelectDrawerButton";
+import AddTaskButton from "./task/AddTaskButton";
+import TaskDialog from "./task/TaskDialog";
+import Logo from "../components/Logo";
+import { useCalendar } from "../context/CalendarProvider";
 
-const useStyles = makeStyles<Theme>((theme) => ({
+interface StyleProps {
+	viewMode: "week" | "month" | "agenda";
+}
+
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 	layout: {
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "flex-start",
-		minHeight: "100%",
+		height: "calc(100% - 40px)",
 		[theme.breakpoints.down("md")]: {
 			flexDirection: "column",
 		},
@@ -25,71 +29,65 @@ const useStyles = makeStyles<Theme>((theme) => ({
 		width: "-webkit-fill-available",
 	},
 	appBar: {
+		height: "100%",
 		maxWidth: "fit-content",
-		marginRight: "50px",
-		paddingTop: "20px",
+		padding: "20px 25px 20px 20px",
+		borderRight: `1px solid ${theme.palette.divider}`,
 		[theme.breakpoints.down("md")]: {
+			height: "fit-content",
+			padding: "20px 20px 0px",
+			borderRight: "none",
 			marginRight: 0,
 		},
 	},
-	logo: {
-		backgroundImage: `url(${taskCalendar})`,
-		width: "50px",
-		height: "50px",
-		backgroundSize: "cover",
-		backgroundPositionY: "center",
-		backgroundRepeat: "no-repeat",
-		marginRight: "20px",
-	},
-	brand: {
+	pageHeader: {
 		display: "flex",
-		flexDirection: "row",
 		alignItems: "center",
-		marginBottom: theme.spacing(5),
+		justifyContent: "space-between",
+		padding: "10px 20px 10px 25px",
+		borderBottom: (props) =>
+			props.viewMode === "month"
+				? "none"
+				: `1px solid ${theme.palette.divider}`,
 		[theme.breakpoints.down("md")]: {
-			marginBottom: theme.spacing(2),
+			padding: "10px 10px",
+			display: "block",
 		},
 	},
 }));
 
-const Layout = React.memo(() => {
-	const styles = useStyles();
+const Layout = () => {
+	const calendar = useCalendar();
+
+	const styles = useStyles({ viewMode: calendar.viewMode });
 
 	return (
-		<Container>
-			<div className={styles.layout}>
-				<div className={styles.appBar}>
-					<div className={styles.brand}>
-						<div className={styles.logo} />
-						<Typography margin={0} variant="h6">
-							Task Calendar
-						</Typography>
-					</div>
-					<DateSelectCalendarMode />
-				</div>
+		<div className={styles.layout}>
+			<div className={styles.appBar}>
+				<Logo />
 
-				<div className={styles.page}>
-					<Box
-						display="flex"
-						alignItems="center"
-						justifyContent="space-between"
-						mb={2}
-					>
-						<Box display="flex" alignItems="center">
-							<Hidden mdUp={true}>
-								<DateSelectDrawerButton />
-							</Hidden>
-
-							<NewTaskButton />
-						</Box>
-
-						<LayoutDates />
-					</Box>
-					<Outlet />
-				</div>
+				<DateSelectCalendarMode />
 			</div>
-		</Container>
-	);
-});
 
-export default Layout;
+			<div className={styles.page}>
+				<div className={styles.pageHeader}>
+					<Box display="flex" alignItems="center">
+						<Hidden mdUp={true}>
+							<DateSelectDrawerButton />
+						</Hidden>
+
+						<AddTaskButton />
+					</Box>
+
+					<LayoutDates />
+				</div>
+
+				<Outlet />
+			</div>
+
+			<TaskDialog />
+		</div>
+	);
+};
+
+export default observer(Layout);

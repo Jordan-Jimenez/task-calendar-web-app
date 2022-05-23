@@ -10,28 +10,28 @@ import {
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 
-import { useApp } from "../../context/AppProvider";
+import { useCalendar } from "../../context/CalendarProvider";
 import isToday from "../../core/domain/isToday";
 
 const CalendarViewSwitch = () => {
 	const navigate = useNavigate();
 
-	const app = useApp();
+	const calendar = useCalendar();
 
 	const onChange = useCallback(
 		(event: SelectChangeEvent) => {
-			if (isToday(app.focusedDate)) {
+			if (isToday(calendar.focusedDate)) {
 				navigate(`/${event.target.value}`);
 
 				return;
 			}
 
 			navigate(
-				`/${event.target.value}/${app.focusedDate.year}/${app.focusedDate.month}/${app.focusedDate.day}`
+				`/${event.target.value}/${calendar.focusedDate.year}/${calendar.focusedDate.month}/${calendar.focusedDate.day}`
 			);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[app.focusedDate]
+		[calendar.focusedDate]
 	);
 
 	return (
@@ -39,11 +39,12 @@ const CalendarViewSwitch = () => {
 			<FormControl sx={{ m: 1, minWidth: 120 }} size="small">
 				<InputLabel id="demo-simple-select-helper-label">View</InputLabel>
 				<Select
-					value={app.viewMode}
+					value={calendar.viewMode}
 					onChange={onChange}
 					labelId="demo-simple-select-helper-label"
 					label="View"
 				>
+					<MenuItem value={"agenda"}>Agenda</MenuItem>
 					<MenuItem value={"month"}>Month</MenuItem>
 					<MenuItem value={"week"}>Week</MenuItem>
 				</Select>

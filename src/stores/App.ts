@@ -1,41 +1,80 @@
 import { DateTime } from "luxon";
-import { action, computed, makeAutoObservable } from "mobx";
+import { computed, makeAutoObservable } from "mobx";
 
-import getCalendarDays from "../core/domain/getCalendarDays";
+export interface TaskInfo {
+	title: string;
+	notes?: string;
+	complete: boolean;
+	dueDate: string;
+	id: string;
+}
 
-export default class App {
+class App {
 	constructor() {
 		makeAutoObservable(this);
+
+		this.getTasks();
 	}
 
-	public viewMode: "month" | "week" = "week";
+	public tasks?: {
+		[key: string]: TaskInfo;
+	} = {};
 
-	public focusedDate: DateTime = DateTime.local();
+	public storeTask(task: TaskInfo) {
+		let tasks = JSON.parse(
+			localStorage.getItem("taskCalendarTasks") || "{}"
+		) as {
+			[key: string]: TaskInfo;
+		};
 
-	public incrementOfView: number = 0;
+		tasks[task.id] = task;
 
-	@action
-	public incrementDateView() {
-		this.incrementOfView++;
+		localStorage.setItem("taskCalendarTasks", JSON.stringify(tasks));
+
+		this.tasks = tasks;
 	}
 
-	@action
-	public decrementDateView() {
-		this.incrementOfView--;
+	public deleteTask(taskId: string) {
+		let tasks = JSON.parse(
+			localStorage.getItem("taskCalendarTasks") || "{}"
+		) as {
+			[key: string]: TaskInfo;
+		};
+
+		delete tasks[taskId];
+
+		localStorage.setItem("taskCalendarTasks", JSON.stringify(tasks));
+
+		this.tasks = tasks;
 	}
 
-	@action
-	public setFocusedDate(date?: DateTime | null) {
-		this.focusedDate = date || DateTime.local();
-	}
-
-	@action
-	public setViewMode(mode: "month" | "week") {
-		this.viewMode = mode;
+	private getTasks() {
+		this.tasks = JSON.parse(localStorage.getItem("taskCalendarTasks") || "{}");
 	}
 
 	@computed
-	public get focusedDateRange() {
-		return getCalendarDays(this.focusedDate, this.viewMode);
+	public get taskArr() {
+		return Object.values(this.tasks || {});
+	}
+
+	@computed
+	public get tasksByDate() {
+		const taskDates = this.taskArr
+			.map((task) => DateTime.fromISO(task.dueDate))
+			.filter((date) => date)
+			.sort((a, b) => a.valueOf() - b.valueOf())
+			.map((date) => date.toISO());
+
+		const datesWithTasks = Array.from(new Set(taskDates));
+
+		let obj: { [key: string]: TaskInfo[] } = {};
+
+		datesWithTasks
+			.map((date) => this.taskArr.filter((tasks) => tasks.dueDate === date))
+			.map((date) => (obj[date[0].dueDate] = date));
+
+		return obj;
 	}
 }
+
+export default new App();

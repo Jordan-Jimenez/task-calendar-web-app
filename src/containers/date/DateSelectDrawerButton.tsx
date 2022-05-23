@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
 
-import { Tooltip, IconButton } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { createSearchParams, useSearchParams } from "react-router-dom";
+
+import ToolTipIconButton from "../../components/ToolTipIconButton";
 
 const DateSelectDrawerButton = React.memo(() => {
 	const setSearchParams = useSearchParams()[1];
@@ -11,14 +12,14 @@ const DateSelectDrawerButton = React.memo(() => {
 		setSearchParams(createSearchParams({ calendarDrawer: "open" }).toString());
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [window.location.pathname]);
 
 	return (
-		<Tooltip title={`Open Calendar Select`}>
-			<IconButton onClick={openDrawer}>
-				<CalendarMonthIcon />
-			</IconButton>
-		</Tooltip>
+		<ToolTipIconButton
+			icon={<CalendarMonthIcon />}
+			tip={`Open Calendar Select`}
+			onClick={openDrawer}
+		/>
 	);
 });
 

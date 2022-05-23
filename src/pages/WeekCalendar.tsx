@@ -2,14 +2,14 @@ import { Grid } from "@mui/material";
 import { observer } from "mobx-react-lite";
 
 import WeekDay from "../components/WeekDay";
-import { useApp } from "../context/AppProvider";
+import { useCalendar } from "../context/CalendarProvider";
 
 const WeekCalendar = () => {
-	const app = useApp();
+	const calendar = useCalendar();
 
 	return (
 		<>
-			{app.focusedDateRange.map((week, i) => (
+			{calendar.calendarDates.map((week, i) => (
 				<Grid key={`week: ${i + 1}`} container>
 					{week.map((d) => (
 						<WeekDay date={d} key={d?.toISO()} />

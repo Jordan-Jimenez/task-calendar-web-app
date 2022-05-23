@@ -3,14 +3,15 @@ import React, { useEffect } from "react";
 import { DateTime } from "luxon";
 import { useParams } from "react-router-dom";
 
-import { useApp } from "../context/AppProvider";
+import { useCalendar } from "../context/CalendarProvider";
 import MonthCalendar from "./MonthCalendar";
 import WeekCalendar from "./WeekCalendar";
+import TaskAgenda from "./TaskAgenda";
 
 const Root = React.memo(() => {
 	const params = useParams();
 
-	const app = useApp();
+	const calendar = useCalendar();
 
 	useEffect(() => {
 		let focusedDate = DateTime.local();
@@ -21,16 +22,19 @@ const Root = React.memo(() => {
 				"y/L/d"
 			);
 		}
-		app.setFocusedDate(focusedDate);
-		app.setViewMode(params.view as "week" | "month");
+		calendar.setFocusedDate(focusedDate);
+		calendar.setViewMode(params.view as "week" | "month");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params]);
 
 	return (
-		<div>
+		<>
 			{params.view === "month" && <MonthCalendar />}
+
 			{params.view === "week" && <WeekCalendar />}
-		</div>
+
+			{params.view === "agenda" && <TaskAgenda />}
+		</>
 	);
 });
 
