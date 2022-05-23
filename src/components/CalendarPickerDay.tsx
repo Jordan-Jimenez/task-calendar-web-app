@@ -17,7 +17,9 @@ const CalendarPickerDay: FC<ICalendarPickerDayProps> = ({
 	DayComponentProps,
 }) => {
 	const hasTasks = useMemo(() => {
-		const tasks = App.tasksByDate[day.startOf("day").toISO()];
+		const tasks = (App.tasksByDate[day.startOf("day").toISO()] || []).filter(
+			(task) => !task.complete
+		);
 
 		if (tasks && tasks.length > 0) {
 			return true;
