@@ -34,6 +34,7 @@ const useStyles = makeStyles<Theme, IStyleProps>({
 		marginBottom: "5px",
 	},
 	grid: {
+		maxWidth: "100%",
 		height: "inherit",
 		borderLeft: "1px solid #E0E0E0",
 		"&:last-child": {
@@ -42,7 +43,7 @@ const useStyles = makeStyles<Theme, IStyleProps>({
 		"&:first-child": {
 			borderLeft: "none",
 		},
-		overflowX: "clip",
+		overflow: "hidden",
 	},
 	tasksContainer: {
 		padding: "0px 5px",

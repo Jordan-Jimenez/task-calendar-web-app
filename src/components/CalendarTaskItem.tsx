@@ -19,11 +19,10 @@ const useStyles = makeStyles<Theme, StyleParms>({
 		textOverflow: "ellipsis",
 		whiteSpace: "nowrap",
 		justifyContent: (props) => (props.agenda ? "flex-start" : "center"),
+		opacity: (props) => (props.completed ? "0.25" : "1"),
 	},
 	text: {
 		textDecoration: (props) => (props.completed ? "line-through" : "none"),
-		textDecorationThickness: "5px",
-		textDecorationWidth: "5px",
 	},
 });
 

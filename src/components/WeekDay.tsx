@@ -14,8 +14,9 @@ interface StyleProps {
 
 const useStyles = makeStyles<Theme, StyleProps>({
 	gridItem: {
+		maxWidth: "100%",
 		borderRight: "1px solid #E0E0E0",
-		overflowX: "clip",
+		overflowX: "hidden",
 		"&:last-child": {
 			borderRight: "none",
 		},
